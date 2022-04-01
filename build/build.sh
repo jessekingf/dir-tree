@@ -3,11 +3,11 @@ set -e
 
 # Build parameters
 src=../src
-sln=$src/Example.sln
-mainProj=$src/Example/Example.csproj
+sln=$src/DirectoryTree.sln
+mainProj=$src/DirectoryTree/DirectoryTree.csproj
 
 dist=../dist
-publishDir=$dist/Publish/Example
+publishDir=$dist/Publish/DirectoryTree
 packagesDir=$dist/Packages
 coverageDir=$dist/Coverage
 

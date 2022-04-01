@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <Product>Example Solution</Product>
+    <Product>Directory Tree</Product>
     <Authors>Jesse King</Authors>
     <Copyright>Copyright (c) Jesse King</Copyright>
     <NeutralLanguage>en-CA</NeutralLanguage>

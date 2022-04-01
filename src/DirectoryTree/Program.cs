@@ -1,9 +1,7 @@
 ﻿// Licensed under the MIT License.
 // See LICENSE.txt in the project root for license information.
 
-namespace Example;
-
-using Example.Library;
+namespace DirectoryTree;
 
 /// <summary>
 /// The entry class of the application.
@@ -16,6 +14,5 @@ internal class Program
     public static void Main()
     {
         Console.WriteLine("Hello world!");
-        Foo.Bar();
     }
 }
