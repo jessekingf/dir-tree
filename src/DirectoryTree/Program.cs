@@ -13,6 +13,8 @@ internal class Program
     /// </summary>
     public static void Main()
     {
-        Console.WriteLine("Hello world!");
+        string path = Directory.GetCurrentDirectory();
+        Stream outputStream = Console.OpenStandardOutput();
+        DirectoryPrinter.PrintTree(path, outputStream);
     }
 }
