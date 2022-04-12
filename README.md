@@ -18,6 +18,7 @@ path  The directory path to print.
 Options:
 
 ```shell
+-a, --all      Include hidden files in the output.
 -v, --version  Display the application version.
 -h, --help     Display the help.
 ```

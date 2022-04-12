@@ -52,18 +52,19 @@ internal class Program
         }
         else
         {
-            PrintDirectoryTree(options.Path);
+            PrintDirectoryTree(options);
         }
     }
 
     /// <summary>
     /// Prints the directory tree.
     /// </summary>
-    /// <param name="path">The path.</param>
-    private static void PrintDirectoryTree(string path)
+    /// <param name="options">The options parsed from the program arguments.</param>
+    private static void PrintDirectoryTree(Options options)
     {
         Stream outputStream = Console.OpenStandardOutput();
-        DirectoryPrinter.PrintTree(outputStream, path);
+        DirectoryPrinter dirPrinter = new(options.AllFiles);
+        dirPrinter.PrintTree(outputStream, options.Path);
     }
 
     /// <summary>

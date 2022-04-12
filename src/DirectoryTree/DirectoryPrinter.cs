@@ -6,7 +6,7 @@ namespace DirectoryTree;
 /// <summary>
 /// Handles printing directory structures.
 /// </summary>
-public static class DirectoryPrinter
+public class DirectoryPrinter
 {
     private const char TreeRoot = '.';
     private const string TreeTab = "|   ";
@@ -14,11 +14,30 @@ public static class DirectoryPrinter
     private const char DirSuffix = '/';
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="DirectoryPrinter"/> class.
+    /// </summary>
+    /// <param name="allFiles">Whether to include all files, including hidden files, in the output.</param>
+    public DirectoryPrinter(bool allFiles = false)
+    {
+        this.AllFiles = allFiles;
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to include all files,
+    /// including hidden files, in the output.
+    /// </summary>
+    public bool AllFiles
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
     /// Prints the directory tree.
     /// </summary>
     /// <param name="outputStream">The output stream to print to.</param>
     /// <param name="path">The directory path to print.</param>
-    public static void PrintTree(Stream outputStream, string path)
+    public void PrintTree(Stream outputStream, string path)
     {
         if (outputStream == null)
         {
@@ -37,10 +56,10 @@ public static class DirectoryPrinter
 
         using StreamWriter writer = new StreamWriter(outputStream);
         Console.WriteLine(TreeRoot);
-        PrintTreeNode(writer, path, 0);
+        this.PrintTreeNode(writer, path, 0);
     }
 
-    private static void PrintTreeNode(StreamWriter writer, string path, int level)
+    private void PrintTreeNode(StreamWriter writer, string path, int level)
     {
         try
         {
@@ -49,12 +68,24 @@ public static class DirectoryPrinter
 
             foreach (DirectoryInfo subdir in dirInfo.GetDirectories().OrderBy(d => d.Name))
             {
+                if (!this.AllFiles
+                    && subdir.Attributes.HasFlag(FileAttributes.Hidden))
+                {
+                    continue;
+                }
+
                 writer.WriteLine(string.Concat(treeTabs, TreeEntry, subdir.Name, DirSuffix));
-                PrintTreeNode(writer, subdir.FullName, level + 1);
+                this.PrintTreeNode(writer, subdir.FullName, level + 1);
             }
 
             foreach (FileInfo file in dirInfo.GetFiles().OrderBy(f => f.Name))
             {
+                if (!this.AllFiles
+                    && file.Attributes.HasFlag(FileAttributes.Hidden))
+                {
+                    continue;
+                }
+
                 writer.WriteLine(string.Concat(treeTabs, TreeEntry, file.Name));
             }
         }

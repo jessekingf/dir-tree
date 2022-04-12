@@ -90,6 +90,7 @@ namespace DirectoryTree.Properties {
         ///
         ///Options:
         ///
+        ///-a, --all      Include hidden files in the output.
         ///-v, --version  Display the application version.
         ///-h, --help     Display the help..
         /// </summary>

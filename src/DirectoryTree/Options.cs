@@ -34,4 +34,14 @@ public class Options
         get;
         set;
     }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to include all files,
+    /// including hidden files, in the output.
+    /// </summary>
+    public bool AllFiles
+    {
+        get;
+        set;
+    }
 }

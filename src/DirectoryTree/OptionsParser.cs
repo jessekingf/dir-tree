@@ -29,6 +29,10 @@ public static class OptionsParser
             {
                 switch (arg.ToLowerInvariant())
                 {
+                    case "--all":
+                    case "-a":
+                        options.AllFiles = true;
+                        continue;
                     case "--help":
                     case "-h":
                         options.DisplayHelp = true;
