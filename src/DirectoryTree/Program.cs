@@ -63,7 +63,7 @@ internal class Program
     private static void PrintDirectoryTree(string path)
     {
         Stream outputStream = Console.OpenStandardOutput();
-        DirectoryPrinter.PrintTree(path, outputStream);
+        DirectoryPrinter.PrintTree(outputStream, path);
     }
 
     /// <summary>

@@ -16,10 +16,25 @@ public static class DirectoryPrinter
     /// <summary>
     /// Prints the directory tree.
     /// </summary>
-    /// <param name="path">The directory path to print.</param>
     /// <param name="outputStream">The output stream to print to.</param>
-    public static void PrintTree(string path, Stream outputStream)
+    /// <param name="path">The directory path to print.</param>
+    public static void PrintTree(Stream outputStream, string path)
     {
+        if (outputStream == null)
+        {
+            throw new ArgumentNullException(nameof(outputStream));
+        }
+
+        if (string.IsNullOrEmpty(path))
+        {
+            throw new ArgumentException("The path cannot be null or empty.", nameof(path));
+        }
+
+        if (!Directory.Exists(path))
+        {
+            throw new ArgumentException("The path does not exist.", nameof(path));
+        }
+
         using StreamWriter writer = new StreamWriter(outputStream);
         Console.WriteLine(TreeRoot);
         PrintTreeNode(writer, path, 0);
@@ -27,18 +42,25 @@ public static class DirectoryPrinter
 
     private static void PrintTreeNode(StreamWriter writer, string path, int level)
     {
-        DirectoryInfo dirInfo = new DirectoryInfo(path);
-        string treeTabs = string.Concat(Enumerable.Repeat(TreeTab, level));
-
-        foreach (DirectoryInfo subdir in dirInfo.GetDirectories().OrderBy(d => d.Name))
+        try
         {
-            writer.WriteLine(string.Concat(treeTabs, TreeEntry, subdir.Name, DirSuffix));
-            PrintTreeNode(writer, subdir.FullName, level + 1);
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            string treeTabs = string.Concat(Enumerable.Repeat(TreeTab, level));
+
+            foreach (DirectoryInfo subdir in dirInfo.GetDirectories().OrderBy(d => d.Name))
+            {
+                writer.WriteLine(string.Concat(treeTabs, TreeEntry, subdir.Name, DirSuffix));
+                PrintTreeNode(writer, subdir.FullName, level + 1);
+            }
+
+            foreach (FileInfo file in dirInfo.GetFiles().OrderBy(f => f.Name))
+            {
+                writer.WriteLine(string.Concat(treeTabs, TreeEntry, file.Name));
+            }
         }
-
-        foreach (FileInfo file in dirInfo.GetFiles().OrderBy(f => f.Name))
+        catch (UnauthorizedAccessException)
         {
-            writer.WriteLine(string.Concat(treeTabs, TreeEntry, file.Name));
+            // Skip directories the user does not have access to.
         }
     }
 }
