@@ -1,12 +1,12 @@
 ﻿// Licensed under the MIT License.
 // See LICENSE.txt in the project root for license information.
 
-namespace DirectoryTree;
+namespace DirectoryTree.Options;
 
 /// <summary>
 /// Represents the program options.
 /// </summary>
-public class Options
+public class ProgramOptions
 {
     /// <summary>
     /// Gets or sets a value indicating whether to display the application help documentation.

@@ -3,6 +3,8 @@
 
 namespace DirectoryTree;
 
+using DirectoryTree.Git;
+
 /// <summary>
 /// Handles printing directory structures.
 /// </summary>

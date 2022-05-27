@@ -4,6 +4,7 @@
 namespace DirectoryTree;
 
 using System.Reflection;
+using DirectoryTree.Options;
 using DirectoryTree.Properties;
 
 /// <summary>
@@ -20,7 +21,7 @@ internal class Program
         try
         {
             // Parse the command line arguments.
-            Options options = OptionsParser.Parse(args);
+            ProgramOptions options = OptionsParser.Parse(args);
 
             // Process the options.
             ProcessOptions(options);
@@ -40,7 +41,7 @@ internal class Program
     /// Processes and executes the specified program options.
     /// </summary>
     /// <param name="options">The options parsed from the program arguments.</param>
-    private static void ProcessOptions(Options options)
+    private static void ProcessOptions(ProgramOptions options)
     {
         if (options.DisplayHelp)
         {
@@ -60,7 +61,7 @@ internal class Program
     /// Prints the directory tree.
     /// </summary>
     /// <param name="options">The options parsed from the program arguments.</param>
-    private static void PrintDirectoryTree(Options options)
+    private static void PrintDirectoryTree(ProgramOptions options)
     {
         Stream outputStream = Console.OpenStandardOutput();
         DirectoryPrinter dirPrinter = new(options.AllFiles, options.GitOnly);

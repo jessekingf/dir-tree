@@ -1,7 +1,7 @@
 ﻿// Licensed under the MIT License.
 // See LICENSE.txt in the project root for license information.
 
-namespace DirectoryTree;
+namespace DirectoryTree.Options;
 
 using DirectoryTree.Properties;
 
@@ -15,9 +15,9 @@ public static class OptionsParser
     /// </summary>
     /// <param name="args">The command-line arguments.</param>
     /// <returns>The program options.</returns>
-    public static Options Parse(string[] args)
+    public static ProgramOptions Parse(string[] args)
     {
-        Options options = new Options();
+        ProgramOptions options = new();
         foreach (string arg in args ?? Array.Empty<string>())
         {
             if (string.IsNullOrEmpty(arg))

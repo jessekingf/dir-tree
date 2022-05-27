@@ -1,12 +1,12 @@
 ﻿// Licensed under the MIT License.
 // See LICENSE.txt in the project root for license information.
 
-namespace DirectoryTree;
+namespace DirectoryTree.Options;
 
 /// <summary>
 /// The exception thrown when an invalid program option is specified.
 /// </summary>
-/// <seealso cref="System.Exception" />
+/// <seealso cref="Exception" />
 public class InvalidOptionException : Exception
 {
     /// <summary>
