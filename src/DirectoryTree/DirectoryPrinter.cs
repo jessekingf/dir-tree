@@ -15,7 +15,7 @@ public class DirectoryPrinter
     private const string TreeEntry = "|-- ";
     private const char DirSuffix = '/';
 
-    private readonly GitController gitController = new GitController();
+    private readonly GitController git = new GitController();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DirectoryPrinter"/> class.
@@ -71,7 +71,7 @@ public class DirectoryPrinter
         }
 
         if (this.GitOnly
-            && !this.gitController.IsGitRepository(path))
+            && !this.git.IsRepository(path))
         {
             throw new ArgumentException($"Not a git repository: {path}");
         }
@@ -98,7 +98,7 @@ public class DirectoryPrinter
 
                 if (this.GitOnly
                     && (subdir.Name.Equals(".git", StringComparison.Ordinal)
-                        || !this.gitController.IsGitTracked(subdir.FullName)))
+                        || !this.git.IsTracked(subdir.FullName)))
                 {
                     continue;
                 }
@@ -116,7 +116,7 @@ public class DirectoryPrinter
                 }
 
                 if (this.GitOnly
-                    && !this.gitController.IsGitTracked(file.FullName))
+                    && !this.git.IsTracked(file.FullName))
                 {
                     continue;
                 }

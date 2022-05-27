@@ -37,7 +37,7 @@ public class GitController
     /// </summary>
     /// <param name="path">The path to check.</param>
     /// <returns>True if the path is a Git repository; false otherwise.</returns>
-    public bool IsGitRepository(string path)
+    public bool IsRepository(string path)
     {
         if (string.IsNullOrEmpty(path))
         {
@@ -58,7 +58,7 @@ public class GitController
     /// </summary>
     /// <param name="path">The path to check.</param>
     /// <returns>True if the path is tracked by Git; false otherwise.</returns>
-    public bool IsGitTracked(string path)
+    public bool IsTracked(string path)
     {
         if (string.IsNullOrEmpty(path))
         {

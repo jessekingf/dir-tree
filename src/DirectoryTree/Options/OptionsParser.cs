@@ -3,6 +3,7 @@
 
 namespace DirectoryTree.Options;
 
+using DirectoryTree.Git;
 using DirectoryTree.Properties;
 
 /// <summary>
@@ -69,6 +70,15 @@ public static class OptionsParser
         if (!Directory.Exists(options.Path))
         {
             throw new InvalidOptionException(string.Format(Resources.InvalidPath, options.Path));
+        }
+
+        if (options.GitOnly)
+        {
+            GitController git = new();
+            if (!git.IsRepository(options.Path))
+            {
+                throw new InvalidOptionException(string.Format(Resources.InvalidGitRepo, options.Path));
+            }
         }
 
         return options;

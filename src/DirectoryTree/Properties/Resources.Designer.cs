@@ -61,6 +61,15 @@ namespace DirectoryTree.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Git repository: {0}.
+        /// </summary>
+        internal static string InvalidGitRepo {
+            get {
+                return ResourceManager.GetString("InvalidGitRepo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid option: {0}.
         /// </summary>
         internal static string InvalidOption {
