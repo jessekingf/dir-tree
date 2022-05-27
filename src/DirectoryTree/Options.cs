@@ -44,4 +44,14 @@ public class Options
         get;
         set;
     }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to only include
+    /// files tracked in a git repository.
+    /// </summary>
+    public bool GitOnly
+    {
+        get;
+        set;
+    }
 }

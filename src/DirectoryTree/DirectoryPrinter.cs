@@ -13,13 +13,17 @@ public class DirectoryPrinter
     private const string TreeEntry = "|-- ";
     private const char DirSuffix = '/';
 
+    private readonly GitController gitController = new GitController();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DirectoryPrinter"/> class.
     /// </summary>
     /// <param name="allFiles">Whether to include all files, including hidden files, in the output.</param>
-    public DirectoryPrinter(bool allFiles = false)
+    /// <param name="gitOnly">Whether to only include files tracked in a git repository.</param>
+    public DirectoryPrinter(bool allFiles = false, bool gitOnly = false)
     {
         this.AllFiles = allFiles;
+        this.GitOnly = gitOnly;
     }
 
     /// <summary>
@@ -27,6 +31,16 @@ public class DirectoryPrinter
     /// including hidden files, in the output.
     /// </summary>
     public bool AllFiles
+    {
+        get;
+        set;
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to only include
+    /// files tracked in a git repository.
+    /// </summary>
+    public bool GitOnly
     {
         get;
         set;
@@ -51,7 +65,13 @@ public class DirectoryPrinter
 
         if (!Directory.Exists(path))
         {
-            throw new ArgumentException("The path does not exist.", nameof(path));
+            throw new ArgumentException($"Path not found: {path}");
+        }
+
+        if (this.GitOnly
+            && !this.gitController.IsGitRepository(path))
+        {
+            throw new ArgumentException($"Not a git repository: {path}");
         }
 
         using StreamWriter writer = new StreamWriter(outputStream);
@@ -74,6 +94,13 @@ public class DirectoryPrinter
                     continue;
                 }
 
+                if (this.GitOnly
+                    && (subdir.Name.Equals(".git", StringComparison.Ordinal)
+                        || !this.gitController.IsGitTracked(subdir.FullName)))
+                {
+                    continue;
+                }
+
                 writer.WriteLine(string.Concat(treeTabs, TreeEntry, subdir.Name, DirSuffix));
                 this.PrintTreeNode(writer, subdir.FullName, level + 1);
             }
@@ -82,6 +109,12 @@ public class DirectoryPrinter
             {
                 if (!this.AllFiles
                     && file.Attributes.HasFlag(FileAttributes.Hidden))
+                {
+                    continue;
+                }
+
+                if (this.GitOnly
+                    && !this.gitController.IsGitTracked(file.FullName))
                 {
                     continue;
                 }

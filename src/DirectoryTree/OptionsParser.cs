@@ -33,6 +33,10 @@ public static class OptionsParser
                     case "-a":
                         options.AllFiles = true;
                         continue;
+                    case "--git":
+                    case "-g":
+                        options.GitOnly = true;
+                        continue;
                     case "--help":
                     case "-h":
                         options.DisplayHelp = true;

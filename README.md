@@ -10,15 +10,16 @@ dirtree [options] [path]
 
 Arguments:
 
-```shell
+```text
 path  The directory path to print.
       If not provided, defaults to the current directory.
 ```
 
 Options:
 
-```shell
+```text
 -a, --all      Include hidden files in the output.
+-g, --git      Include only files tracked in a git repository.
 -v, --version  Display the application version.
 -h, --help     Display the help.
 ```

@@ -91,6 +91,7 @@ namespace DirectoryTree.Properties {
         ///Options:
         ///
         ///-a, --all      Include hidden files in the output.
+        ///-g, --git      Include only files tracked in a git repository.
         ///-v, --version  Display the application version.
         ///-h, --help     Display the help..
         /// </summary>
