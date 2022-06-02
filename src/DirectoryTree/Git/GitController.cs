@@ -46,7 +46,7 @@ public class GitController
 
         if (!Directory.Exists(path))
         {
-            throw new DirectoryNotFoundException($"Path not found: {path}");
+            throw new ArgumentException($"Path not found: {path}");
         }
 
         ProcessResult result = this.processManager.Run(@"git", @"rev-parse", path);
