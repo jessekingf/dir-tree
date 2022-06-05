@@ -3,20 +3,50 @@
 
 namespace DirectoryTree.Options;
 
+using System.IO.Abstractions;
 using DirectoryTree.Git;
 using DirectoryTree.Properties;
 
 /// <summary>
 /// Parses the command line arguments.
 /// </summary>
-public static class OptionsParser
+public class OptionsParser
 {
+    /// <summary>
+    /// Provides access to the file system.
+    /// </summary>
+    private readonly IFileSystem fileSystem;
+
+    /// <summary>
+    /// Provides access to Git source control.
+    /// </summary>
+    private readonly IGitController git = new GitController();
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OptionsParser"/> class.
+    /// </summary>
+    public OptionsParser()
+        : this(new FileSystem(), new GitController())
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OptionsParser"/> class.
+    /// </summary>
+    /// <param name="fileSystem">Provides access to the file system.</param>
+    /// <param name="git">Handles access to Git.</param>
+    public OptionsParser(IFileSystem fileSystem, IGitController git)
+    {
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        this.git = git ?? throw new ArgumentNullException(nameof(git));
+    }
+
     /// <summary>
     /// Parses the program options from the command-line arguments.
     /// </summary>
     /// <param name="args">The command-line arguments.</param>
     /// <returns>The program options.</returns>
-    public static ProgramOptions Parse(string[] args)
+    public ProgramOptions Parse(string[] args)
     {
         ProgramOptions options = new();
         foreach (string arg in args ?? Array.Empty<string>())
@@ -64,18 +94,17 @@ public static class OptionsParser
         if (string.IsNullOrEmpty(options.Path))
         {
             // Default to the current working directory.
-            options.Path = Directory.GetCurrentDirectory();
+            options.Path = this.fileSystem.Directory.GetCurrentDirectory();
         }
 
-        if (!Directory.Exists(options.Path))
+        if (!this.fileSystem.Directory.Exists(options.Path))
         {
             throw new InvalidOptionException(string.Format(Resources.InvalidPath, options.Path));
         }
 
         if (options.GitOnly)
         {
-            GitController git = new();
-            if (!git.IsRepository(options.Path))
+            if (!this.git.IsRepository(options.Path))
             {
                 throw new InvalidOptionException(string.Format(Resources.InvalidGitRepo, options.Path));
             }

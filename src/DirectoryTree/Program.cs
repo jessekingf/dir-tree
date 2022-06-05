@@ -21,7 +21,7 @@ internal class Program
         try
         {
             // Parse the command line arguments.
-            ProgramOptions options = OptionsParser.Parse(args);
+            ProgramOptions options = new OptionsParser().Parse(args);
 
             // Process the options.
             ProcessOptions(options);
@@ -64,7 +64,12 @@ internal class Program
     private static void PrintDirectoryTree(ProgramOptions options)
     {
         Stream outputStream = Console.OpenStandardOutput();
-        DirectoryPrinter dirPrinter = new(options.AllFiles, options.GitOnly);
+        DirectoryPrinter dirPrinter = new()
+        {
+            AllFiles = options.AllFiles,
+            GitOnly = options.GitOnly,
+        };
+
         dirPrinter.PrintTree(outputStream, options.Path);
     }
 

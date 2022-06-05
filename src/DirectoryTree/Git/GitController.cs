@@ -3,13 +3,19 @@
 
 namespace DirectoryTree.Git;
 
+using System.IO.Abstractions;
 using Common.Diagnostics;
 
 /// <summary>
 /// Handles git operations.
 /// </summary>
-public class GitController
+public class GitController : IGitController
 {
+    /// <summary>
+    /// Provides access to the file system.
+    /// </summary>
+    private readonly IFileSystem fileSystem;
+
     /// <summary>
     /// The process manager to use to run Git commands.
     /// </summary>
@@ -19,24 +25,22 @@ public class GitController
     /// Initializes a new instance of the <see cref="GitController"/> class.
     /// </summary>
     public GitController()
-        : this(new ProcessManager())
+        : this(new FileSystem(), new ProcessManager())
     {
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GitController"/> class.
     /// </summary>
+    /// <param name="fileSystem">Provides access to the file system.</param>
     /// <param name="processManager">The process manager.</param>
-    public GitController(IProcessManager processManager)
+    public GitController(IFileSystem fileSystem, IProcessManager processManager)
     {
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         this.processManager = processManager ?? throw new ArgumentNullException(nameof(processManager));
     }
 
-    /// <summary>
-    /// Gets whether the specified path is a Git repository.
-    /// </summary>
-    /// <param name="path">The path to check.</param>
-    /// <returns>True if the path is a Git repository; false otherwise.</returns>
+    /// <inheritdoc />
     public bool IsRepository(string path)
     {
         if (string.IsNullOrEmpty(path))
@@ -44,20 +48,16 @@ public class GitController
             throw new ArgumentException("Value cannot be null or empty.", nameof(path));
         }
 
-        if (!Directory.Exists(path))
+        if (!this.fileSystem.Directory.Exists(path))
         {
-            throw new ArgumentException($"Path not found: {path}");
+            throw new ArgumentException($"Directory not found: {path}");
         }
 
         ProcessResult result = this.processManager.Run(@"git", @"rev-parse", path);
         return result.ExitCode == 0;
     }
 
-    /// <summary>
-    /// Gets whether the specified file or directory is tracked by Git.
-    /// </summary>
-    /// <param name="path">The path to check.</param>
-    /// <returns>True if the path is tracked by Git; false otherwise.</returns>
+    /// <inheritdoc />
     public bool IsTracked(string path)
     {
         if (string.IsNullOrEmpty(path))
@@ -65,8 +65,8 @@ public class GitController
             throw new ArgumentException("Value cannot be null or empty.", nameof(path));
         }
 
-        if (!File.Exists(path)
-            && !Directory.Exists(path))
+        if (!this.fileSystem.File.Exists(path)
+            && !this.fileSystem.Directory.Exists(path))
         {
             throw new ArgumentException($"Path not found: {path}");
         }

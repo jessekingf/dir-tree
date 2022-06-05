@@ -3,6 +3,7 @@
 
 namespace DirectoryTree;
 
+using System.IO.Abstractions;
 using DirectoryTree.Git;
 
 /// <summary>
@@ -10,22 +11,53 @@ using DirectoryTree.Git;
 /// </summary>
 public class DirectoryPrinter
 {
+    /// <summary>
+    /// The character to print to represent the root directory.
+    /// </summary>
     private const char TreeRoot = '.';
+
+    /// <summary>
+    /// The characters to print to tab over in the tree before printing a node.
+    /// </summary>
     private const string TreeTab = "|   ";
-    private const string TreeEntry = "|-- ";
+
+    /// <summary>
+    /// The prefix to print for a tree node.
+    /// </summary>
+    private const string TreeEntryPrefix = "|-- ";
+
+    /// <summary>
+    /// The suffix to print at the end of a directory node.
+    /// </summary>
     private const char DirSuffix = '/';
 
-    private readonly GitController git = new GitController();
+    /// <summary>
+    /// Provides access to the file system.
+    /// </summary>
+    private readonly IFileSystem fileSystem;
+
+    /// <summary>
+    /// Provides access to Git source control.
+    /// </summary>
+    private readonly IGitController git = new GitController();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DirectoryPrinter"/> class.
     /// </summary>
-    /// <param name="allFiles">Whether to include all files, including hidden files, in the output.</param>
-    /// <param name="gitOnly">Whether to only include files tracked in a git repository.</param>
-    public DirectoryPrinter(bool allFiles = false, bool gitOnly = false)
+    public DirectoryPrinter()
+        : this(new FileSystem(), new GitController())
     {
-        this.AllFiles = allFiles;
-        this.GitOnly = gitOnly;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DirectoryPrinter"/> class.
+    /// </summary>
+    /// <param name="fileSystem">Provides access to the file system.</param>
+    /// <param name="git">Handles access to Git.</param>
+    public DirectoryPrinter(IFileSystem fileSystem, IGitController git)
+    {
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        this.git = git ?? throw new ArgumentNullException(nameof(git));
     }
 
     /// <summary>
@@ -65,7 +97,7 @@ public class DirectoryPrinter
             throw new ArgumentException("The path cannot be null or empty.", nameof(path));
         }
 
-        if (!Directory.Exists(path))
+        if (!this.fileSystem.Directory.Exists(path))
         {
             throw new ArgumentException($"Path not found: {path}");
         }
@@ -85,10 +117,10 @@ public class DirectoryPrinter
     {
         try
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            IDirectoryInfo dirInfo = this.fileSystem.DirectoryInfo.FromDirectoryName(path);
             string treeTabs = string.Concat(Enumerable.Repeat(TreeTab, level));
 
-            foreach (DirectoryInfo subdir in dirInfo.GetDirectories().OrderBy(d => d.Name))
+            foreach (IDirectoryInfo subdir in dirInfo.GetDirectories().OrderBy(d => d.Name))
             {
                 if (!this.AllFiles
                     && subdir.Attributes.HasFlag(FileAttributes.Hidden))
@@ -103,11 +135,11 @@ public class DirectoryPrinter
                     continue;
                 }
 
-                writer.WriteLine(string.Concat(treeTabs, TreeEntry, subdir.Name, DirSuffix));
+                writer.WriteLine(string.Concat(treeTabs, TreeEntryPrefix, subdir.Name, DirSuffix));
                 this.PrintTreeNode(writer, subdir.FullName, level + 1);
             }
 
-            foreach (FileInfo file in dirInfo.GetFiles().OrderBy(f => f.Name))
+            foreach (IFileInfo file in dirInfo.GetFiles().OrderBy(f => f.Name))
             {
                 if (!this.AllFiles
                     && file.Attributes.HasFlag(FileAttributes.Hidden))
@@ -121,7 +153,7 @@ public class DirectoryPrinter
                     continue;
                 }
 
-                writer.WriteLine(string.Concat(treeTabs, TreeEntry, file.Name));
+                writer.WriteLine(string.Concat(treeTabs, TreeEntryPrefix, file.Name));
             }
         }
         catch (UnauthorizedAccessException)
