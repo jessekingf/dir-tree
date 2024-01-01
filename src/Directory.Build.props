@@ -1,16 +1,10 @@
 ﻿<Project>
   <PropertyGroup>
-    <Product>Directory Tree</Product>
-    <Authors>Jesse King</Authors>
-    <Copyright>Copyright (c) Jesse King</Copyright>
-    <NeutralLanguage>en-CA</NeutralLanguage>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <NeutralLanguage>en-CA</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,6 +15,7 @@
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -36,16 +31,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers.Error" Version="1.0.2">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.255">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
+  <Import Project="Common.Product.props" />
   <Import Project="Common.Tests.props" Condition="$(MSBuildProjectName.EndsWith('.Tests'))" />
 </Project>

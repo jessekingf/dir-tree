@@ -56,7 +56,7 @@ public class OptionsParser
                 continue;
             }
 
-            if (arg.StartsWith("-", StringComparison.InvariantCulture))
+            if (arg.StartsWith('-'))
             {
                 switch (arg.ToLowerInvariant())
                 {

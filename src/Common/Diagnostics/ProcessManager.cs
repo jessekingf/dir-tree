@@ -32,7 +32,7 @@ public class ProcessManager : IProcessManager
             throw new ArgumentNullException(nameof(arguments));
         }
 
-        ProcessStartInfo startInfo = new ProcessStartInfo
+        ProcessStartInfo startInfo = new()
         {
             FileName = fileName,
             Arguments = arguments,
@@ -53,12 +53,12 @@ public class ProcessManager : IProcessManager
     /// <returns>The result of the process execution.</returns>
     private ProcessResult Run(ProcessStartInfo startInfo)
     {
-        using Process process = new Process()
+        using Process process = new()
         {
             StartInfo = startInfo,
         };
 
-        IList<string> standardOutput = new List<string>();
+        List<string> standardOutput = new();
         process.OutputDataReceived += (s, e) =>
         {
             if (e?.Data != null)
@@ -67,7 +67,7 @@ public class ProcessManager : IProcessManager
             }
         };
 
-        IList<string> standardError = new List<string>();
+        List<string> standardError = new();
         process.ErrorDataReceived += (s, e) =>
         {
             if (e?.Data != null)
