@@ -63,7 +63,7 @@ internal class Program
     /// <param name="options">The options parsed from the program arguments.</param>
     private static void PrintDirectoryTree(ProgramOptions options)
     {
-        Stream outputStream = Console.OpenStandardOutput();
+        using Stream outputStream = Console.OpenStandardOutput();
         DirectoryPrinter dirPrinter = new()
         {
             AllFiles = options.AllFiles,
